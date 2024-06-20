@@ -1,12 +1,39 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status 
-from .serializers import ActivitySerializer
+from rest_framework import filters
 from ..models import UserActivity
+from rest_framework import generics
+from rest_framework.views import APIView
+from .serializers import ActivitySerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 
-# Create your views here.
+
+# Implement Filtering
+class ActivityFilterView(generics.ListAPIView):
+    queryset = UserActivity.objects.all()
+    serializer_class = ActivitySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user_name', 'type', 'duration', 'calories_burned']
+
+
+# Set the number of items per page  
+class setPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = 'page'
+
+
+# Implement Pagination    
+class ActivityPaginationView(ListAPIView):
+    queryset = UserActivity.objects.all()
+    serializer_class = ActivitySerializer  
+    pagination_class = setPagination
+
+
+
 
 class UserActivityView(APIView):
 

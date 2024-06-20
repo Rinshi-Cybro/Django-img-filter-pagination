@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -28,6 +29,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Image settings
+# Actual directory user files go to
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# URL used to access the media
+MEDIA_URL = '/media/'
+
 
 # Application definition
 
@@ -42,7 +50,6 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [ 
     'django_filters',
-
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -156,6 +163,11 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'] 
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100   # Set the number of items per page  
 }
 
 
